@@ -102,11 +102,6 @@ Relationship between minutes-weighted foul pressure (FTR-based) and team win per
 
 ---
 
-## How to Run
-```bash
-python src/build_bigwest_dataset.py
-python src/bigwest_figures.py
-
 ---
 ## Limitations & Extensions
 - Analysis is limited to a single conference and season.
@@ -114,3 +109,10 @@ python src/bigwest_figures.py
 - Future work could extend this framework to all Division I conferences and explore distributional effects of defensive impact across rosters.
 
 ---
+
+## How to Run
+```bash
+python src/build_bigwest_dataset.py
+python src/bigwest_figures.py
+
+
