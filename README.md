@@ -86,7 +86,7 @@ Relationship between minutes-weighted foul pressure (FTR-based) and team win per
 - **Foul pressure metrics** (FTR and FTA) exhibit weaker linear relationships with win
   percentage, indicating that drawing fouls may be more context-dependent rather than a
   direct driver of winning on its own.
-
+  
 ---
 
 ## Outputs
@@ -107,3 +107,10 @@ Relationship between minutes-weighted foul pressure (FTR-based) and team win per
 python src/build_bigwest_dataset.py
 python src/bigwest_figures.py
 
+---
+## Limitations & Extensions
+- Analysis is limited to a single conference and season.
+- Team-level correlations do not imply causation.
+- Future work could extend this framework to all Division I conferences and explore distributional effects of defensive impact across rosters.
+
+---
