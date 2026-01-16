@@ -44,28 +44,36 @@ player contribution scale from the individual level to team success. The reason 
 ### Defensive Rating vs Win Percentage
 Lower defensive rating (better defense) is strongly associated with higher win percentage.
 
-![WinPct vs Defensive Rating](data/figures/01_winpct_vs_def_rating.png)
+![WinPct vs Defensive Rating](figures/01_winpct_vs_def_rating.png)
 
 ---
 
 ### Defensive Impact (D-PRPG) vs Win Percentage
-Minutes-weighted defensive points reduced per game shows a strong positive relationship with winning.
+Minutes-weighted defensive points prevented per game shows a strong positive relationship with winning.
 
-![WinPct vs D-PRPG](data/figures/02_winpct_vs_dprpg.png)
+![WinPct vs D-PRPG](figures/02_winpct_vs_dprpg.png)
 
 ---
 
 ### Win Percentage by Team
 Distribution of conference win percentage across Big West teams.
 
-![WinPct by Team](data/figures/03_winpct_by_team.png)
+![WinPct by Team](figures/03_winpct_by_team.png)
 
 ---
 
 ### Correlation Summary
 Comparison of team-level metrics by Pearson correlation with win percentage.
 
-![Correlation Bar Chart](data/figures/04_correlation_bar.png)
+![Correlation Bar Chart](figures/04_correlation_bar.png)
+
+---
+
+### Foul Pressure vs Win Percentage
+Relationship between minutes-weighted foul pressure (FTR-based) and team win percentage.
+
+![WinPct vs Foul Pressure](figures/05_winpct_vs_foul_pressure.png)
+
 
 ---
 
