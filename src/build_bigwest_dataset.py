@@ -129,7 +129,7 @@ def canon_team(name: str) -> str:
 
 
 # ----------------------------
-# CSV cleaning
+# Clean CSV data 
 # ----------------------------
 CLASS_VALUES = {"fr", "so", "jr", "sr", "gr"}
 
@@ -172,8 +172,8 @@ def load_and_clean_player_csv(path: Path) -> pd.DataFrame:
     if "Team" not in df.columns:
         raise RuntimeError(f"CSV missing 'Team'. Columns seen: {list(df.columns)}")
 
-    # Fix misaligned Player fields:
-    # Player column might contain class ("Sr"), next col is date-ish ("7-Jun"), next col is real player name
+    # To fix misaligned Player fields:
+    # Player column might contain class ("Sr"), next col is date-ish ("7-Jun"), next col is the real player name
     if "Player" in df.columns:
         sample = df["Player"].dropna().astype(str).head(30).str.lower().str.strip()
         class_like = (sample.isin(CLASS_VALUES)).mean() > 0.6
@@ -197,13 +197,13 @@ def load_and_clean_player_csv(path: Path) -> pd.DataFrame:
     keep = [c for c in wanted if c in df.columns]
     df = df[keep].copy()
 
-    # Convert numeric-ish columns
+    # Convert columns
     numeric_cols = ["Min%", "Usg", "D-PRPG", "D-Rtg", "OR", "DR", "Blk", "Stl", "FTR"]
     for c in numeric_cols:
         if c in df.columns:
             df[c] = pd.to_numeric(df[c].astype(str).str.replace(",", "", regex=False), errors="coerce")
 
-    # FTA is a season total in your table; keep as attempts (numeric)
+    # FTA is a total season entry in table; keep as attempts
     df["FTA_att"] = df["FTA"].apply(parse_made_attempts) if "FTA" in df.columns else np.nan
 
     if "Min%" not in df.columns:
@@ -215,7 +215,7 @@ def load_and_clean_player_csv(path: Path) -> pd.DataFrame:
 
 
 # ----------------------------
-# Aggregation (minutes-weighted)
+# Aggregation (using minutes-weighted)
 # ----------------------------
 def weighted_avg(series: pd.Series, weights: pd.Series) -> float:
     m = series.notna() & weights.notna()
@@ -238,7 +238,7 @@ def aggregate_to_team_level(players: pd.DataFrame) -> pd.DataFrame:
     df = players.copy()
     df["TeamCanon"] = df["Team"].apply(canon_team)
 
-    # Ensure columns exist
+    # Double check that columns exist
     for c in ["OR", "D-Rtg", "Usg", "D-PRPG", "DR", "Blk", "Stl", "FTR", "FTA_att"]:
         if c not in df.columns:
             df[c] = np.nan
@@ -262,7 +262,7 @@ def aggregate_to_team_level(players: pd.DataFrame) -> pd.DataFrame:
                 + weighted_avg(g["Stl"], w_min)
             ),
 
-            # Offense / roster context
+            # Offense context w/ roster 
             "w_Usg": weighted_avg(g["Usg"], w_min),
             "w_OR": weighted_avg(g["OR"], w_min),
 
@@ -272,7 +272,7 @@ def aggregate_to_team_level(players: pd.DataFrame) -> pd.DataFrame:
             "w_FTA_att": weighted_avg(g["FTA_att"], w_min),     # volume context
         }
 
-        # Top roles by minutes (optional)
+        # Top roles by minutes 
         if "Role" in g.columns:
             role_minutes = (
                 g.dropna(subset=["Role"])
@@ -297,7 +297,7 @@ def merge_team_metrics(standings: pd.DataFrame, team_metrics: pd.DataFrame) -> p
     m = team_metrics.copy()
     out = s.merge(m, on="TeamCanon", how="left")
 
-    # Fuzzy fill remaining misses
+    #  fill any remaining misses
     missing = out["players_in_csv"].isna()
     if missing.any():
         metric_keys = m["TeamCanon"].tolist()
@@ -317,7 +317,7 @@ def merge_team_metrics(standings: pd.DataFrame, team_metrics: pd.DataFrame) -> p
 
 
 # ----------------------------
-# Analysis helpers
+# Further Analysis help 
 # ----------------------------
 def corr_table(df: pd.DataFrame, y: str, xs: list[str]) -> pd.DataFrame:
     rows = []
@@ -390,14 +390,14 @@ def main():
     pd.set_option("display.width", 200)
     print(df.sort_values("WinPct", ascending=False)[show_cols].to_string(index=False))
 
-    # Print TopRoles cleanly
+    # Cleanly print TopRoles 
     if "TopRoles" in df.columns:
         print("\nTopRoles (clean):")
         tr = df.sort_values("WinPct", ascending=False)[["Team", "TopRoles"]].copy()
         for _, r in tr.iterrows():
             print(f"  {r['Team']}: {r['TopRoles']}")
 
-    # Analysis: correlations + simple regressions vs WinPct
+    # Analysis: correlations w/ simple regressions vs WinPct
     metrics = [
         "w_D_PRPG", "w_D_Rtg",
         "w_FoulPressure", "w_FTR_minwt", "w_FTA_att",
@@ -418,3 +418,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
